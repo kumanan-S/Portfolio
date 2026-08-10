@@ -1,0 +1,16 @@
+{
+  "name": "developer-portfolio-workspace",
+  "version": "1.0.0",
+  "description": "Full Stack Developer Portfolio for Kumanan S",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install && npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm start --prefix server\"",
+    "client": "npm run dev --prefix client",
+    "server": "npm start --prefix server",
+    "build-client": "npm run build --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
