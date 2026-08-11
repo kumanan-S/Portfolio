@@ -13,13 +13,28 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
   const [visitorCount, setVisitorCount] = useState(1480);
+export default function Contact() {
+  const { personalInfo, statistics } = portfolioData;
 
-  // Animate visitor count on load
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+  const [visitorCount, setVisitorCount] = useState(1480);
+
   useEffect(() => {
     const randomIncrement = Math.floor(Math.random() * 5) + 1;
+
     const timer = setTimeout(() => {
       setVisitorCount((prev) => prev + randomIncrement);
     }, 1500);
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -27,13 +42,20 @@ export default function Contact() {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.name.trim()) errors.name = "Name is required";
+    if (!formData.name.trim()) {
+      errors.name = "Name is required";
+    }
+
     if (!formData.email.trim()) {
       errors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
-    if (!formData.subject.trim()) errors.subject = "Subject is required";
+
+    if (!formData.subject.trim()) {
+      errors.subject = "Subject is required";
+    }
+
     if (!formData.message.trim()) {
       errors.message = "Message is required";
     } else if (formData.message.trim().length < 10) {
@@ -41,42 +63,61 @@ export default function Contact() {
     }
 
     setFormErrors(errors);
+
     return Object.keys(errors).length === 0;
   };
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  if (!validateForm()) return;
+  // THIS MUST BE INSIDE Contact()
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
 
-  setIsSubmitting(true);
-  setSubmitStatus(null);
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
-  try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/contact`,
-      formData
-    );
-
-    if (response.data.success) {
-      setSubmitStatus("success");
-
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    } else {
-      setSubmitStatus("error");
+    if (formErrors[name]) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
     }
-  } catch (error) {
-    console.error("Contact form error:", error);
+  };
 
-    setSubmitStatus("error");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/contact`,
+        formData
+      );
+
+      if (response.data.success) {
+        setSubmitStatus("success");
+
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      console.error("Contact form error:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section
       id="contact"
