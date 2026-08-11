@@ -62,7 +62,9 @@ export default function Contact() {
 
     try {
       // Connect to the Express backend endpoint
-      const response = await axios.post("http://localhost:5000/api/contact", formData);
+        const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/contact`,
+      formData,
       if (response.data.success) {
         setSubmitStatus("success");
         setFormData({ name: "", email: "", subject: "", message: "" });
