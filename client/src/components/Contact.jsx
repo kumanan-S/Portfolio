@@ -7,15 +7,6 @@ import { portfolioData } from "../data/portfolioData";
 export default function Contact() {
   const { personalInfo, statistics } = portfolioData;
 
-  // Form State
-  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
-  const [formErrors, setFormErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
-  const [visitorCount, setVisitorCount] = useState(1480);
-export default function Contact() {
-  const { personalInfo, statistics } = portfolioData;
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
