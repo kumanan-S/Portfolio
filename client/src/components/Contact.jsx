@@ -43,23 +43,13 @@ export default function Contact() {
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear specific error as user types
-    if (formErrors[name]) {
-      setFormErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
+  if (!validateForm()) return;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-    setSubmitStatus(null);
-
+  setIsSubmitting(true);
+  setSubmitStatus(null);
 
   try {
     const response = await axios.post(
@@ -68,7 +58,7 @@ export default function Contact() {
     );
 
     if (response.data.success) {
-      setStatus("Your message has been sent successfully!");
+      setSubmitStatus("success");
 
       setFormData({
         name: "",
@@ -77,20 +67,16 @@ export default function Contact() {
         message: "",
       });
     } else {
-      setStatus(response.data.message || "Failed to send message.");
+      setSubmitStatus("error");
     }
   } catch (error) {
     console.error("Contact form error:", error);
 
-    setStatus(
-      error.response?.data?.message ||
-      "Unable to connect to the server."
-    );
+    setSubmitStatus("error");
   } finally {
     setIsSubmitting(false);
   }
 };
-
   return (
     <section
       id="contact"
