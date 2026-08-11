@@ -18,11 +18,14 @@ app.use(helmet({
 
 // CORS Middleware to allow Vite Frontend
 app.use(cors({
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
-  methods: ["GET", "POST"],
+  origin: [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://kumanan-portfolio.onrender.com"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
-
 // Logging and Request Parsing
 app.use(morgan("dev"));
 app.use(express.json());
