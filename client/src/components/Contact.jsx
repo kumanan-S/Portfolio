@@ -60,28 +60,36 @@ export default function Contact() {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    try {
-      // Connect to the Express backend endpoint
-        const response = await axios.post(
+
+  try {
+    const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/contact`,
-      formData,
-      if (response.data.success) {
-        setSubmitStatus("success");
-        setFormData({ name: "", email: "", subject: "", message: "" });
-      } else {
-        setSubmitStatus("error");
-      }
-    } catch (err) {
-      console.error("API error details:", err);
-      // Fallback success for local development if server is offline (with dummy notification)
-      // This ensures a functional feel even under standalone runs
-      setSubmitStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    } finally {
-      setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus(null), 5000); // Hide toast after 5s
+      formData
+    );
+
+    if (response.data.success) {
+      setStatus("Your message has been sent successfully!");
+
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } else {
+      setStatus(response.data.message || "Failed to send message.");
     }
-  };
+  } catch (error) {
+    console.error("Contact form error:", error);
+
+    setStatus(
+      error.response?.data?.message ||
+      "Unable to connect to the server."
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <section
